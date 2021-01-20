@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  app:
+    build:
+      context: .
+      args:
+        USER_ID: "${USER_ID:-1000}"
+        GROUP_ID: "${GROUP_ID:-1000}"
+    restart: unless-stopped
+
+    env_file: .env
+    environment:
+      - PG_HOST=$PG_HOST
+      - PG_USER=$PG_USER
+      - PG_PWD=$PG_PWD
+      - PG_DB=$PG_DB
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b 0.0.0.0"
+    volumes:
+      - .:/myapp
+    ports:
+      - "3006:3000"
